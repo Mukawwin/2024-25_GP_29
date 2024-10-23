@@ -8,4 +8,22 @@ By leveraging advanced Optical Character Recognition (OCR) and Natural Language 
 Mukawwin will highlight any potential allergens or non-compliant ingredients, providing users with clear, actionable information. 
 This app will simplify the food selection process, reduce the risk of accidental allergen exposure, and empower users to make safer, more informed dietary choices.   
 ## Technology Stack
+- **Platform**: Android
+- **Programming Language**: Dart (with Flutter framework)
+- **Backend**: Firebase (Firestore for database, Authentication for user management)
+
 ## How to Launch the Application
+**Clone the Repository:**
+Get the latest version of the project from our repository.
+
+**Navigate to the Project Directory:**
+cd mukawwin_3
+
+**Install Dependencies:**
+Make sure you have Flutter installed. 
+Then, 
+run: flutter pub get.
+
+**Run the App:**
+Connect an Android device or use an emulator, then run:
+flutter run.
