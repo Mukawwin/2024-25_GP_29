@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "55847445845",
+    "project_id": "mukawwin-f205f",
+    "storage_bucket": "mukawwin-f205f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55847445845:android:7c787479f94be06c807bdc",
+        "android_client_info": {
+          "package_name": "com.example.mukawwin_3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55847445845-4sdspu1tan4016lnv9fu0dutpr2uvqkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpVE56nrvWTbAbD7-dVALz-mkG9R-A45k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55847445845-4sdspu1tan4016lnv9fu0dutpr2uvqkd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "55847445845-pat31buhbeac4p37d6d31svi5vcrpsmu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mukawwin3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
