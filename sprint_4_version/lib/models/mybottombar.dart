@@ -1,0 +1,270 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mukawwin_3/screens/expirationlist.dart';
+import 'package:mukawwin_3/screens/imageselected.dart';
+import 'package:mukawwin_3/screens/incidentloglist.dart';
+import 'package:mukawwin_3/screens/savelist.dart';
+
+import 'package:permission_handler/permission_handler.dart';
+
+bool isload = false;
+
+class Mybottombar extends StatefulWidget {
+  const Mybottombar({super.key});
+
+  @override
+  State<Mybottombar> createState() => _MybottombarState();
+}
+
+class _MybottombarState extends State<Mybottombar> {
+  File? imageFile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Container(
+              height: 40.0,
+            ),
+            Container(
+              height: 100.0,
+              decoration: const BoxDecoration(
+                color: Color(0xFF4B7e80),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15.0, left: 15.0),
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'homepage');
+                          },
+                          icon: const Icon(
+                            Icons.home,
+                            size: 45.0,
+                            color: Colors.white,
+                          ),
+                          // Image.asset(
+                          //   "icons/profile.png",
+                          //   width: 50.0,
+                          //   height: 50.0,
+                          // ),
+                        ),
+                        const Text(
+                          "Home",
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 15.0,
+                              color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15.0, left: 15.0),
+                    child: Column(
+                      children: [
+                        PopupMenuButton<String>(
+                          onSelected: (value) {
+                            if (value == 'safelist') {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Savelist(),
+                                ),
+                              );
+                            } else if (value == 'exlist') {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Expirationlist(),
+                                ),
+                              );
+                            } else if (value == 'inclist') {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Incidentloglist(),
+                                ),
+                              );
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                                value: 'safelist', child: Text('Safe List')),
+                            const PopupMenuDivider(),
+                            const PopupMenuItem(
+                                value: 'exlist',
+                                child: Text('Expiration List')),
+                            const PopupMenuDivider(),
+                            const PopupMenuItem(
+                                value: 'inclist', child: Text('Incident List')),
+                          ],
+                          child: Image.asset(
+                            "icons/list.png",
+                            width: 50.0,
+                            height: 50.0,
+                          ),
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Image.asset(
+                          //     "icons/list.png",
+                          //     width: 50.0,
+                          //     height: 50.0,
+                          //   ),
+                          // ),
+                        ),
+
+                        // IconButton(
+                        //   onPressed: () {
+                        //     Navigator.of(context).pushReplacement(
+                        //       MaterialPageRoute(
+                        //         builder: (context) => const Savelist(),
+                        //       ),
+                        //     );
+                        //     //************************************************ */
+                        //     //AT SPRINT 2
+                        //   },
+                        //   icon: Image.asset(
+                        //     "icons/list.png",
+                        //     width: 50.0,
+                        //     height: 50.0,
+                        //   ),
+                        // ),
+                        const Text(
+                          "Lists",
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 15.0,
+                              color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 0,
+          right: 0,
+          left: 0,
+          child: CircleAvatar(
+            radius: 60.0,
+            backgroundColor: Colors.white,
+            child: CircleAvatar(
+              radius: 50.0,
+              backgroundColor: const Color(0xFF4B7e80),
+              child: IconButton(
+                onPressed: () async {
+                  setState(() {
+                    isload = true;
+                  });
+                  // إذن الوصول إلى الكاميرا
+
+                  Map<Permission, PermissionStatus> statuses =
+                      await [Permission.camera].request();
+                  if (statuses[Permission.camera]!.isGranted) {
+                    _imgFromCamera();
+                    print("================$imageFile=============");
+                  }
+
+                  isload = false;
+                },
+                icon: Image.asset(
+                  "icons/scan.png",
+                  width: 50.0,
+                  height: 50.0,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  final picker = ImagePicker();
+
+  _imgFromCamera() async {
+    print("helllllllllllllllowwwwwwwwww");
+    await picker
+        .pickImage(
+            source: ImageSource.camera,
+            imageQuality: 50) // استدعاء مكتبة image picker
+        .then((value) {
+      if (value != null) {
+        _cropImage(File(value
+            .path)); // استدعاء تابع قص الصور مع تمرير الصورة ك ملف للمعالجة
+      } else {
+        setState(() {
+          isload = false;
+        });
+      }
+    });
+  }
+
+  _cropImage(File imgFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      //   فتح واجهة قص الصورة
+      sourcePath: imgFile.path,
+      uiSettings: [
+        //    إعدادات واجهة المستخدم
+
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+          ],
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+          ],
+        ),
+      ],
+    );
+    if (croppedFile != null) {
+      imageCache.clear(); // مسح ذاكرة التخزين المؤقت
+      setState(() {
+        imageFile = File(croppedFile.path); // حفظ ملف الصورة الجديدة بعد القص
+      });
+      if (imageFile != null) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => ImageSelected(
+              imageFile: imageFile!,
+            ),
+          ),
+        );
+      }
+      print(
+          "+=======================================================$imageFile");
+    } else {
+      setState(() {
+        isload = false;
+      });
+    }
+  }
+}
